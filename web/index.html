@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>helloWorld</title>
+    <script type="text/javascript" src="jquery.min.js"></script>
+</head>
+<body>
+
+<p>使用AJAX以JSON的方式提交数据</p>
+
+<form>
+    id:<input type="number" id="id" /><br>
+    name:<input type="text" id="name" /><br>
+    sex:<input type="text" id="sex" /><br>
+    <input type="button" value="提交" id="sub" />
+</form>
+
+<input type="button" value="more" id="getMore">
+<div id="messageDIV" style="width: 500px; height: 400px; background: yellow">
+</div>
+
+<script>
+    $('#sub').click(function () {
+        var id = document.getElementById('id').value;
+        var name = document.getElementById('name').value;
+        var sex = document.getElementById('sex').value;
+        var user = {"id":id, "name":name, "sex":sex};
+        var url = "ajaxtest";
+
+        $.post(
+            url,
+            {"data":JSON.stringify(user)},
+            function (data) {
+                //获取后台传递的json数据
+                var json = JSON.parse(data);
+                var name = json.user.name;
+                var id = json.user.id;
+                var sex = json.user.sex;
+                $("#messageDIV").html(
+                    "id:"+id+"<br>name:"+name+"<br>sex:"+sex
+                );
+                alert(data);
+
+            });
+    });
+
+    $('#getMore').click(function () {
+
+        var url = "more";
+        $.post(
+            url,
+            function (data) {
+                var users = $.parseJSON(data);
+                for(i in users){
+
+                    var old = $("#messageDIV").html();
+                    var user = users[i];
+                    $("#messageDIV").html(
+                        old + "<br>id:"+user.id+"---name:"+user.name+"---sex:"+user.sex
+                    );
+                }
+            }
+        )
+
+    })
+</script>
+
+</body>
+</html>
